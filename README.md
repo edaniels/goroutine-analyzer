@@ -1,7 +1,8 @@
 ## What?
 
-This project is intended to be used for analyzing 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This tool allows is intended to be used for analyzing stack dumps of goroutines - often helpful for finding leaks, race conditions, wasteful resource consumption, and generally getting an idea of what your program is doing in production.
+
+Inspired by https://github.com/linuxerwang/goroutine-inspect
 
 Here's a simple example of code you can use to generate a goroutine dump.
 ```go
@@ -41,15 +42,15 @@ init(){
 
 To trigger the dump, run `kill -SIGQUIT <pid>`.
 
-## Available Scripts
+## Running 
 
-In the project directory, you can run:
+You can run this locally too.  In the project directory, run:
 
 ### `yarn start`
 
 Runs the app in the development mode.<br />
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+## Notes
 
+I welcome any comments, suggestions, and contributions.
