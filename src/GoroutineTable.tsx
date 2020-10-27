@@ -73,7 +73,7 @@ export default function GoroutineTable(props: TableProps) {
               <td className="goTime">
                 {g.timeMinutes > 0 ? g.timeMinutes : ''}
               </td>
-              <td>{g.group.length}</td>
+              <td>{g.group.length === 0 ? '' : g.group.length + 1}</td>
               <td className="goStack">
                 <Stack goroutine={g} />
               </td>
