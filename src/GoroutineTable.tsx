@@ -93,9 +93,21 @@ type TableHeaderProps = {
 function Stack(props: {goroutine: Goroutine}) {
   const [collapsed, setCollapsed] = useState<boolean>(true);
   return (
-    <code onClick={() => setCollapsed(!collapsed)}>
-      {collapsed ? props.goroutine.lines[0] : props.goroutine.lines.join('\n')}
-    </code>
+    <>
+      <span
+        className="expand"
+        onClick={() => {
+          setCollapsed(!collapsed);
+        }}>
+        {collapsed ? '\u25B6' : '\u25bc'}
+      </span>
+      <code>
+        {' '}
+        {collapsed
+          ? props.goroutine.lines[0]
+          : props.goroutine.lines.join('\n')}
+      </code>
+    </>
   );
 }
 

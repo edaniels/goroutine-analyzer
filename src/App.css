@@ -57,8 +57,29 @@
   }
 }
 
-code {
+.expand {
 	cursor:pointer;
+	padding:5px;
+}
+
+code {
   white-space: pre-wrap;
   line-height: 1.8em;
 }
+
+.link-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size:1em;
+  text-decoration: underline;
+  display: inline;
+  margin: 0;
+  padding: 0;
+}
+
+.link-button:hover,
+.link-button:focus {
+text-decoration: none;
+}
+

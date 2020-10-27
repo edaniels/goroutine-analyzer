@@ -7,6 +7,7 @@ import GoroutineTable from './GoroutineTable';
 import './GoroutineFilter.css';
 import gopher from './gopher-dance-long-3x.gif';
 import github from './GitHub-Mark-32px.png';
+import sample from './sample';
 
 type GoroutineFilterPickerProps = {
   filters: GoroutineStateFilters;
@@ -46,7 +47,6 @@ const toggleFilter = (
     }
     out.push(f);
   }
-  console.log('returned', out);
   return out;
 };
 
@@ -86,17 +86,6 @@ function App() {
   const [goroutines, setGoroutines] = useState<Goroutine[]>();
   const [filters, setFilters] = useState<GoroutineStateFilters>([]);
 
-  /*useEffect(() => {
-    console.log('called effect');
-    let w = new WebWorker(worker, function(result: any) {
-      setLoading(false);
-      setGoroutines(result.data);
-      setFilters(makeFilter(result.data));
-    } as any);
-    setWorker(w);
-  }, []);
-	 */
-
   const [loading, setLoading] = useState<boolean>();
   const onDrop = (acceptedFiles: File[]) => {
     setLoading(true);
@@ -106,12 +95,8 @@ function App() {
     const f: File = acceptedFiles[0];
     const fr = new FileReader();
     fr.onload = function() {
-      console.log('calling onload!');
       if (fr.result != null) {
-        console.log('calling parse goroutines');
         let parsed = parseGoroutines(fr.result as string);
-        console.log('called parse goroutines!');
-        console.log('got', parsed.length);
         setFilters(makeFilter(parsed));
         setLoading(false);
         setGoroutines(parsed);
@@ -120,9 +105,19 @@ function App() {
     fr.onerror = function() {
       console.error('loading failed', fr.error);
     };
-    console.log('calling read as text', f);
     fr.readAsText(f);
   };
+
+  const loadDemo = () => {
+    setLoading(true);
+    setTimeout(() => {
+      let parsed = parseGoroutines(sample);
+      setFilters(makeFilter(parsed));
+      setLoading(false);
+      setGoroutines(parsed);
+    });
+  };
+
   const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop});
   return (
     <div className="App">
@@ -156,6 +151,15 @@ function App() {
           <GoroutineTable goroutines={goroutines} filters={filters} />
         )}
       </div>
+      {!goroutines && (
+        <div className="disclaimer">
+          Or,{' '}
+          <button onClick={loadDemo} className="link-button">
+            load a demo file
+          </button>
+        </div>
+      )}
+
       <div className="disclaimer">
         All data is processed client-side. No data is ever stored, or sent over
         the network.
