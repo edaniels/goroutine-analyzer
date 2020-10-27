@@ -2,12 +2,10 @@ import React, {useCallback, useEffect, useState} from 'react';
 
 import './App.css';
 import {useDropzone} from 'react-dropzone';
-import {Goroutine} from './parser/DumpParser';
+import {Goroutine, parseGoroutines} from './parser/DumpParser';
 import GoroutineTable from './GoroutineTable';
 import './GoroutineFilter.css';
 import gopher from './gopher-dance-long-3x.gif';
-import WebWorker from './WebWorker';
-import worker from './worker'; // eslint-disable-line import/no-webpack-loader-syntax
 
 type GoroutineFilterPickerProps = {
   filters: GoroutineStateFilters;
@@ -82,12 +80,12 @@ function Loading(props: {loading: boolean}) {
 }
 
 function App() {
-  const [workerState, setWorker] = useState<any>();
+  //const [workerState, setWorker] = useState<any>();
 
   const [goroutines, setGoroutines] = useState<Goroutine[]>();
   const [filters, setFilters] = useState<GoroutineStateFilters>([]);
 
-  useEffect(() => {
+  /*useEffect(() => {
     console.log('called effect');
     let w = new WebWorker(worker, function(result: any) {
       setLoading(false);
@@ -96,6 +94,7 @@ function App() {
     } as any);
     setWorker(w);
   }, []);
+	 */
 
   const [loading, setLoading] = useState<boolean>();
   const onDrop = (acceptedFiles: File[]) => {
@@ -104,7 +103,24 @@ function App() {
       return;
     }
     const f: File = acceptedFiles[0];
-    workerState.postMessage(f);
+    const fr = new FileReader();
+    fr.onload = function() {
+      console.log('calling onload!');
+      if (fr.result != null) {
+        console.log('calling parse goroutines');
+        let parsed = parseGoroutines(fr.result as string);
+        console.log('called parse goroutines!');
+        console.log('got', parsed.length);
+        setFilters(makeFilter(parsed));
+        setLoading(false);
+        setGoroutines(parsed);
+      }
+    };
+    fr.onerror = function() {
+      console.error('loading failed', fr.error);
+    };
+    console.log('calling read as text', f);
+    fr.readAsText(f);
   };
   const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop});
   return (

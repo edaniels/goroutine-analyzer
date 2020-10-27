@@ -40,6 +40,12 @@ export default function GoroutineTable(props: TableProps) {
           ? ('' + a.state).localeCompare(b.state)
           : ('' + b.state).localeCompare(a.state),
       );
+    } else if (sortConfig!.key === 'count') {
+      goroutines.sort((a: Goroutine, b: Goroutine) =>
+        sortConfig.direction === SortDirection.Ascending
+          ? a.group.length - b.group.length
+          : b.group.length - a.group.length,
+      );
     } else if (sortConfig.key === 'time') {
       goroutines.sort((a: Goroutine, b: Goroutine) =>
         sortConfig.direction === SortDirection.Ascending
@@ -67,6 +73,7 @@ export default function GoroutineTable(props: TableProps) {
               <td className="goTime">
                 {g.timeMinutes > 0 ? g.timeMinutes : ''}
               </td>
+              <td>{g.group.length}</td>
               <td className="goStack">
                 <Stack goroutine={g} />
               </td>
@@ -143,6 +150,9 @@ function TableHeader(props: TableHeaderProps) {
         </th>
         <th onClick={updateSort('time')} className={getClassNamesFor('time')}>
           Time&nbsp;(min)
+        </th>
+        <th onClick={updateSort('count')} className={getClassNamesFor('count')}>
+          Count
         </th>
         <th>Stack</th>
       </tr>
