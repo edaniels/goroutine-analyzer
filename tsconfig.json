@@ -4,13 +4,14 @@
     "lib": [
       "dom",
       "dom.iterable",
+	  "webworker",
       "esnext"
     ],
 	"noImplicitAny":true,
     "allowJs": true,
     "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
+	"suppressImplicitAnyIndexErrors": true,
+    "esModuleInterop": true, "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "module": "esnext",

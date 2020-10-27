@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {GoroutineStateFilters, GoroutineStateFilter} from './App';
 
 import classNames from 'classnames';
 
@@ -7,6 +8,7 @@ import './GoroutineTable.css';
 
 type TableProps = {
   goroutines: Goroutine[];
+  filters: GoroutineStateFilters;
 };
 
 type SortConfig = {
@@ -46,18 +48,32 @@ export default function GoroutineTable(props: TableProps) {
       );
     }
   }
+  const filterSet = new Set<string>();
+  for (var i = 0; i < props.filters.length; i++) {
+    if (props.filters[i].enabled) {
+      filterSet.add(props.filters[i].state);
+    }
+  }
 
   return (
     <table className="goTable">
       <TableHeader sortConfig={sortConfig} setSortConfig={setSortConfig} />
-      {goroutines.map((g: any) => (
-        <tr key={'goroutine_' + g.id}>
-          <td className="goId">{g.id}</td>
-          <td className="goState">{g.state}</td>
-          <td className="goTime">{g.timeMinutes > 0 ? g.timeMinutes : ''}</td>
-          <td className="goStack">{g.lines[0]}</td>
-        </tr>
-      ))}
+      <tbody>
+        {goroutines.map((g: any) =>
+          filterSet.has(g.state) ? (
+            <tr key={'goroutine_' + g.id}>
+              <td className="goId">{g.id}</td>
+              <td className="goState">{g.state}</td>
+              <td className="goTime">
+                {g.timeMinutes > 0 ? g.timeMinutes : ''}
+              </td>
+              <td className="goStack">
+                <Stack goroutine={g} />
+              </td>
+            </tr>
+          ) : null,
+        )}
+      </tbody>
     </table>
   );
 }
@@ -66,6 +82,16 @@ type TableHeaderProps = {
   sortConfig: SortConfig;
   setSortConfig: (c: SortConfig) => void;
 };
+
+function Stack(props: {goroutine: Goroutine}) {
+  const [collapsed, setCollapsed] = useState<boolean>(true);
+  return (
+    <code onClick={() => setCollapsed(!collapsed)}>
+      {collapsed ? props.goroutine.lines[0] : props.goroutine.lines.join('\n')}
+    </code>
+  );
+}
+
 function TableHeader(props: TableHeaderProps) {
   const getClassNamesFor = (name: string) => {
     if (!props.sortConfig || !props.sortConfig.key) {
@@ -107,19 +133,19 @@ function TableHeader(props: TableHeaderProps) {
   };
 
   return (
-    <tr>
-      <th onClick={updateSort('id')} className={getClassNamesFor('id')}>
-        ID
-      </th>
-      <th onClick={updateSort('state')} className={getClassNamesFor('state')}>
-        State
-      </th>
-      <th onClick={updateSort('time')} className={getClassNamesFor('time')}>
-        Time&nbsp;(min)
-      </th>
-      <th>Stack</th>
-    </tr>
+    <thead>
+      <tr>
+        <th onClick={updateSort('id')} className={getClassNamesFor('id')}>
+          ID
+        </th>
+        <th onClick={updateSort('state')} className={getClassNamesFor('state')}>
+          State
+        </th>
+        <th onClick={updateSort('time')} className={getClassNamesFor('time')}>
+          Time&nbsp;(min)
+        </th>
+        <th>Stack</th>
+      </tr>
+    </thead>
   );
 }
-/*
- */
