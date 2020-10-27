@@ -6,6 +6,7 @@ import {Goroutine, parseGoroutines} from './parser/DumpParser';
 import GoroutineTable from './GoroutineTable';
 import './GoroutineFilter.css';
 import gopher from './gopher-dance-long-3x.gif';
+import github from './GitHub-Mark-32px.png';
 
 type GoroutineFilterPickerProps = {
   filters: GoroutineStateFilters;
@@ -129,9 +130,16 @@ function App() {
       {!goroutines && !loading && (
         <div className="dropTarget" {...getRootProps()}>
           <input {...getInputProps()} />
-          {isDragActive
-            ? 'Drop the files here ...'
-            : "Drag 'n' drop some files here, or click to select files"}
+          {isDragActive ? (
+            'Drop the files here ...'
+          ) : (
+            <>
+              <div className="dropTargetCopy">
+                Drop a file containing a Go stack dump.
+              </div>
+              <div className="dropTargetCopy">Or click to choose a file.</div>
+            </>
+          )}
         </div>
       )}
       <div>
@@ -147,6 +155,18 @@ function App() {
         {goroutines && (
           <GoroutineTable goroutines={goroutines} filters={filters} />
         )}
+      </div>
+      <div className="disclaimer">
+        All data is processed client-side. No data is ever stored, or sent over
+        the network.
+      </div>
+      <p />
+      <div className="disclaimer">
+        <img src={github} />
+        &nbsp;&nbsp;
+        <a href="https://github.com/mpobrien/goroutine-analyzer">
+          Source on Github
+        </a>
       </div>
     </div>
   );
