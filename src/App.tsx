@@ -115,7 +115,7 @@ function App() {
       setFilters(makeFilter(parsed));
       setLoading(false);
       setGoroutines(parsed);
-    });
+    }, 1500);
   };
 
   const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop});
@@ -151,7 +151,7 @@ function App() {
           <GoroutineTable goroutines={goroutines} filters={filters} />
         )}
       </div>
-      {!goroutines && (
+      {!goroutines && !loading && (
         <div className="disclaimer">
           Or,{' '}
           <button onClick={loadDemo} className="link-button">
@@ -160,18 +160,22 @@ function App() {
         </div>
       )}
 
-      <div className="disclaimer">
-        All data is processed client-side. No data is ever stored, or sent over
-        the network.
-      </div>
+      {!goroutines && !loading && (
+        <div className="disclaimer">
+          All data is processed client-side. No data is ever stored, or sent
+          over the network.
+        </div>
+      )}
       <p />
-      <div className="disclaimer">
-        <img src={github} />
-        &nbsp;&nbsp;
-        <a href="https://github.com/mpobrien/goroutine-analyzer">
-          Source on Github
-        </a>
-      </div>
+      {!loading && (
+        <div className="disclaimer">
+          <img src={github} />
+          &nbsp;&nbsp;
+          <a href="https://github.com/mpobrien/goroutine-analyzer">
+            Source on Github
+          </a>
+        </div>
+      )}
     </div>
   );
 }
